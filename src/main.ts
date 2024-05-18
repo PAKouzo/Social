@@ -4,7 +4,7 @@ import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  await app.listen(9001, ()=>{
+  await app.listen(3000, ()=>{
     console.log("server is running!")
   });
   if (module.hot) {
