@@ -26,3 +26,4 @@ npm i class-transformer
 Model: dùng để định nghĩa cấu trúc dữ liệu trong ứng dụng, k tương tác trực tiếp với DB.
 Dto: thường dùng để truyền dữ liệu qua lại giữa các tầng của ứng dụng (ví dụ như truyền dữ liệu từ controller đến service), thường được dùng để xác thực; k tương tác trực tiếp với DB.
 Entity: dùng để định nghĩa cấu trúc bảng dữ liệu trong DB, dùng để tương tác với DB.
+
