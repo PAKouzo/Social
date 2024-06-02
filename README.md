@@ -17,7 +17,7 @@ Thứ tự xử lí: Middleware -> Interceptors -> Pipes -> Route Handler -> Int
     -> Khi chỉ muốn thực hiện 1 đoạn logic nào đó trước khi handler router thì nên dùng middleware.
     -> Còn trường hợp muốn xử lí logic gì đó trước và sau handler router thì nên dùng interceptor.
 
-#Dependency Injection (DI): một nguyên tắc giúp module cấp cao tương tác với module cấp thấp qua interface.
+#Dependency Injection (DI): một nguyên tắc giúp module cấp cao tương tác với module cấp thấp qua interface (gắn các phụ thuộc cần thiết).
 
 npm i class-validator 
 npm i class-transformer
@@ -27,3 +27,10 @@ Model: dùng để định nghĩa cấu trúc dữ liệu trong ứng dụng, k 
 Dto: thường dùng để truyền dữ liệu qua lại giữa các tầng của ứng dụng (ví dụ như truyền dữ liệu từ controller đến service), thường được dùng để xác thực; k tương tác trực tiếp với DB.
 Entity: dùng để định nghĩa cấu trúc bảng dữ liệu trong DB, dùng để tương tác với DB.
 
+# buffer: cấu trúc lưu dữ liệu dưới dạng nhị phân (thường để lưu hình ảnh, video, ...)
+
+# queues: là mẫu thiết kế mạnh mẽ giúp bạn giải quyết các tác vụ bất đồng bộ, các vấn đề về hiệu suất và mở rộng dự án. VD: làm mượt các quy trình xử lý, sử lý các task yêu cầu nhiều tài nguyên và thời gian (VD như chuyển đổi mã âm thanh, ...), freeing up user-facing processes to remain responsive. 
+
+# redis: cơ sở dữ liệu đệm
+
+isGlobal ???
