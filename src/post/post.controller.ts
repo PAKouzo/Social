@@ -1,16 +1,31 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, Inject } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseInterceptors,
+  Inject,
+  UploadedFile,
+} from '@nestjs/common';
 import { PostService } from './post.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { Response } from 'src/common/response/response';
 import { Paging } from 'src/common/Paging/paging';
-import { CACHE_MANAGER, CacheInterceptor,  } from '@nestjs/cache-manager';
+import { CACHE_MANAGER, CacheInterceptor } from '@nestjs/cache-manager';
 import { findPostDto } from './dto/find-post.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
+import { Queue } from 'bull';
 
 @Controller('posts')
 export class PostController {
-  constructor(private readonly postService: PostService) {}
-  @Inject(CACHE_MANAGER) private cacheManager;
+  constructor(
+    private readonly postService: PostService,
+  ) {}
 
   @Post()
   async create(@Body() data: CreatePostDto) {
@@ -60,10 +75,20 @@ export class PostController {
     }
   }
 
-  @Get(':id/get-with-cache')
-  @UseInterceptors(CacheInterceptor)
-  async findById(@Param('id') findpost: findPostDto) {
-    console.log('Run here!');
-    return await this.postService.findById(findpost);
+  // @Get(':id/get-with-cache')
+  // @UseInterceptors(CacheInterceptor)
+  // async findById(@Param('id') findpost: findPostDto) {
+  //   console.log('Run here!');
+  //   return await this.postService.findById(findpost);
+  // }
+
+  @Post('upload')
+  @UseInterceptors(FileInterceptor('file'))
+  uploadImage(@UploadedFile() file: Express.Multer.File){
+    this.postService.uploadImage(file);
+    return {
+      status: 200,
+      message: "Uploading Successfull!"
+    }
   }
 }

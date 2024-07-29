@@ -1,3 +1,7 @@
+nest project initialization command:
+$ npm i -g @nestjs/cli
+$ nest new project-name
+
 CẤU TRÚC NESTJS:
 # Controller: Là nơi xử lý các yêu cầu từ client (xử lý các yêu cầu HTTP, xử lý logic cần thiết và gọi các service tương ứng).
 # Services: chịu thực hiện các tác vụ của ứng dụng. Thường chứa các logic xử lý phức tạp như truy vấn CSDL, gọi API ngoài. giở các sự kiện hoặc thông báo đến các thành phần khác.
@@ -34,3 +38,49 @@ Entity: dùng để định nghĩa cấu trúc bảng dữ liệu trong DB, dùn
 # redis: cơ sở dữ liệu đệm
 
 isGlobal ???
+
+# background job: công việc được xử lý dưới nền, k làm ảnh hưởng đến tương tác người dùng. Những công việc này thường độc lập.
+
+# Cài đặt bull: 
+npm install --save @nestjs/bull bull
+- Import trong app.module:
+    imports: [
+        BullModule.forRoot([
+            redis:{
+                host: 'localhost',
+                port: 6379
+            }
+        ])
+    ]
+    properties other than redis: 
+    - limiter: RateLimiter - Options to control the rate at which the queue's jobs are processed. See RateLimiter for more information. Optional.
+    - redis: RedisOpts - Options to configure the Redis connection. See RedisOpts for more information. Optional.
+    - prefix: string - Prefix for all queue keys. Optional.
+    - defaultJobOptions: JobOpts - Options to control the default settings for new jobs. See JobOpts for more information. Optional.
+    - settings: AdvancedSettings - Advanced Queue configuration settings. These should usually not be changed. See AdvancedSettings for more information. Optional.
+
+- Đăng ký hàng đợi:
+    BullModule.registerQueue({
+        name: 'job-name',
+        redis: {
+            port: ..., (đây là option để chỉ định redis db muốn kết nối trong trường hợp ứng dụng kết nối nhiều redis db)
+        }
+    })
+- Add job:
+    + The first, we must create constructor by InjectQueue to   udentifies the queue by its name.
+        @Injectable()
+        export class AudioService {
+            constructor(@InjectQueue('audio') private audioQueue: Queue) {}
+        }
+    + After that, calling add() method to add job.
+        const job = await this.audioQueue.add({
+                foo: 'name', //tên đối tượng cần xử lý
+            },
+            { delay: 3000 }, //to delay the start of job
+            { lifo: true }, 
+            { priority: N } //to prioritize a job, N is ordinal number. Exp: if ordinal number of job1 is higher than job2, job 1 will processed first. 
+        );
+- Declare a consumer: A consumer is a class defining methods that either process jobs added into the queue, or listen for events on the queue or both. Using @Processor() decorator as follows:
+    @Processor('job-name')
+    
+    

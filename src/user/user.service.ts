@@ -7,7 +7,6 @@ import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { LoginDTO } from './dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
-import { MailerService } from '@nestjs-modules/mailer';
 
 @Injectable()
 export class UserService {
@@ -15,7 +14,6 @@ export class UserService {
     @InjectRepository(UserEntity)
     private userRepository: Repository<UserEntity>,
     private readonly jwtService: JwtService,
-    private mailerService: MailerService
   ) {}
 
   async generateToken(payload:{id: number, email: string, name: string, password: string}){
@@ -38,12 +36,12 @@ export class UserService {
       password: hash,
     });
     await this.userRepository.save(newUser);
-    await this.mailerService.sendMail({
-      to: data.email,
-      subject: 'Welcome to my website!',
-      template: '../templates/email/email.hbs'
-    })
-    return await newUser;
+    // await this.mailerService.sendMail({
+    //   to: data.email,
+    //   subject: 'Welcome to my website!',
+    //   template: './email/email.hbs'
+    // })
+    // return await newUser;
   }
 
   async login(data: LoginDTO): Promise<any> {
@@ -84,7 +82,7 @@ export class UserService {
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+    return this.userRepository.update(id, updateUserDto);
   }
 
   remove(id: number) {
